@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<bases:BaseContentPage x:Class="CryptoDCACalculator.Views.LoginPage"
+                       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:bases="clr-namespace:CryptoDCACalculator.Views.Bases"
+                       xmlns:controls="clr-namespace:CryptoDCACalculator.Controls"
+                       xmlns:viewModels="clr-namespace:CryptoDCACalculator.ViewModels"
+                       x:DataType="viewModels:LoginViewModel"
+                       x:TypeArguments="viewModels:LoginViewModel"
+                       BackgroundColor="{StaticResource Secondary}"
+                       Shell.NavBarIsVisible="False">
+
+    <Border Margin="20"
+            Padding="5"
+            BackgroundColor="{StaticResource White}"
+            HorizontalOptions="Fill"
+            StrokeShape="RoundRectangle 5"
+            StrokeThickness="0"
+            VerticalOptions="Center">
+
+        <Grid Padding="20"
+              HorizontalOptions="Fill"
+              RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+              RowSpacing="10"
+              VerticalOptions="Center">
+
+            <Label Grid.Row="0"
+                   FontAttributes="Bold"
+                   FontFamily="{StaticResource AlegreyaSansRegularFontFamily}"
+                   FontSize="22"
+                   HorizontalTextAlignment="Center"
+                   Text="Welcome back!" />
+
+            <Label Grid.Row="1"
+                   Margin="0,0,0,30"
+                   FontAttributes="Bold"
+                   FontFamily="{StaticResource MontserratRegularFontFamily}"
+                   FontSize="14"
+                   HorizontalTextAlignment="Center"
+                   Text="Access your existing account"
+                   TextColor="{StaticResource Gray500}" />
+
+
+            <controls:CryptoEntry Grid.Row="2"
+                                  Keyboard="Email"
+                                  Placeholder="Email address"
+                                  Text="{Binding UserName}" />
+
+            <controls:CryptoEntry Grid.Row="4"
+                                  IsPassword="True"
+                                  Placeholder="Password"
+                                  Text="{Binding Password}" />
+
+            <Button Grid.Row="6"
+                    Margin="0,40,0,0"
+                    Command="{Binding LoginCommand}"
+                    FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                    Text="Login" />
+            <Button Grid.Row="7"
+                    BackgroundColor="{StaticResource White}"
+                    BorderColor="{StaticResource Primary}"
+                    BorderWidth="1"
+                    FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                    Text="Create Account"
+                    TextColor="{StaticResource Primary}" />
+
+            <Button Grid.Row="8"
+                    BackgroundColor="Transparent"
+                    BorderColor="Transparent"
+                    BorderWidth="0"
+                    FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                    HorizontalOptions="End"
+                    Text="Forgot your password?"
+                    TextColor="{StaticResource Gray500}" />
+        </Grid>
+    </Border>
+</bases:BaseContentPage>

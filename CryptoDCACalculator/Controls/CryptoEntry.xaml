@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<VerticalStackLayout x:Class="CryptoDCACalculator.Controls.CryptoEntry"
+                     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:extendedEntry="clr-namespace:CryptoDCACalculator.Controls.ExtendedEntry">
+    <Label Margin="0,0,0,5"
+           FontAttributes="Bold"
+           FontFamily="{StaticResource MontserratRegularFontFamily}"
+           FontSize="14"
+           HorizontalTextAlignment="Start"
+           Text="Password"
+           TextColor="{StaticResource Gray300}">
+        <Border.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Reference InnerEntry}, Path=IsFocused}"
+                         TargetType="Label"
+                         Value="True">
+                <Setter Property="TextColor" Value="{StaticResource Gray600}" />
+            </DataTrigger>
+        </Border.Triggers>
+    </Label>
+
+    <extendedEntry:ExtendedEntry x:Name="InnerEntry"
+                                 HasBorder="False"
+                                 HeightRequest="30"
+                                 IsPassword="True" />
+
+    <Border BackgroundColor="{StaticResource Gray500}"
+            StrokeThickness="1"
+            VerticalOptions="Center">
+        <Border.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Reference InnerEntry}, Path=IsFocused}"
+                         TargetType="Border"
+                         Value="True">
+                <Setter Property="Stroke" Value="{StaticResource Primary}" />
+            </DataTrigger>
+        </Border.Triggers>
+    </Border>
+</VerticalStackLayout>

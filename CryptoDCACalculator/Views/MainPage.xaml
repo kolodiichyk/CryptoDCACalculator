@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<bases:BaseContentPage x:Class="CryptoDCACalculator.Views.MainPage"
+                       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                       xmlns:bases="clr-namespace:CryptoDCACalculator.Views.Bases"
+                       xmlns:converters="clr-namespace:CryptoDCACalculator.Helpers.Converters"
+                       xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+                       xmlns:models="clr-namespace:CryptoDCACalculator.Models"
+                       xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                       xmlns:viewModels="clr-namespace:CryptoDCACalculator.ViewModels"
+                       ios:Page.UseSafeArea="False"
+                       x:DataType="viewModels:MainViewModel"
+                       x:TypeArguments="viewModels:MainViewModel"
+                       BackgroundColor="{StaticResource Primary}">
+
+    <ContentPage.Resources>
+        <converters:RoiColorConverter x:Key="RoiColorConverter" />
+    </ContentPage.Resources>
+
+    <Grid Padding="10,20"
+          BackgroundColor="{StaticResource Secondary}"
+          RowDefinitions="Auto, Auto, Auto, Auto, *"
+          RowSpacing="10">
+
+        <Label Grid.Row="0"
+               FontAttributes="Bold"
+               FontFamily="{StaticResource AlegreyaSansRegularFontFamily}"
+               FontSize="22"
+               HorizontalTextAlignment="Start"
+               Text="Current exchange rates in EUR" />
+
+        <!--  Crypto coins list  -->
+        <CollectionView Grid.Row="1"
+                        Margin="-10,0"
+                        HeightRequest="110"
+                        HorizontalScrollBarVisibility="Never"
+                        ItemsLayout="HorizontalList"
+                        ItemsSource="{Binding CryptoCurrencies}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CryptoCurrencyModel">
+                    <Border Margin="5,20"
+                            Padding="5"
+                            HeightRequest="100"
+                            StrokeShape="RoundRectangle 5"
+                            StrokeThickness="0"
+                            WidthRequest="100">
+
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource White}" />
+                                <GradientStop Offset="0.3" Color="{StaticResource Secondary}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource Secondary}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <Border.Shadow>
+                            <Shadow Brush="{StaticResource Gray300}"
+                                    Opacity="0.5"
+                                    Radius="8"
+                                    Offset="8,8" />
+                        </Border.Shadow>
+
+                        <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="0">
+
+                            <Image Grid.Row="0"
+                                   Grid.RowSpan="3"
+                                   HeightRequest="70"
+                                   Opacity="0.1"
+                                   Source="{Binding Image}"
+                                   TranslationX="-35"
+                                   TranslationY="-35"
+                                   WidthRequest="70" />
+
+                            <Label Grid.Row="0"
+                                   FontAttributes="Bold"
+                                   FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Name}"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalTextAlignment="Center" />
+
+                            <Image Grid.Row="1"
+                                   Aspect="AspectFit"
+                                   HeightRequest="25"
+                                   Source="{Binding Image}"
+                                   WidthRequest="25" />
+
+                            <Label Grid.Row="2"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Symbol}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span FontAttributes="Bold"
+                                              FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                              Text="{Binding Symbol}"
+                                              TextColor="{StaticResource Gray950}" />
+                                        <Span FontSize="12" Text=": " />
+                                        <Span FontFamily="{StaticResource MontserratRegularFontFamily}"
+                                              FontSize="10"
+                                              Text="{Binding CurrentPrice, StringFormat='{0:C}'}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout toolkit:StateContainer.CurrentState="{Binding LoadingCryptoCurrenciesState}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                    <toolkit:StateContainer.StateViews>
+                        <VerticalStackLayout toolkit:StateView.StateKey="Loading">
+                            <ActivityIndicator HeightRequest="30"
+                                               IsRunning="True"
+                                               WidthRequest="30" />
+                        </VerticalStackLayout>
+                        <Label toolkit:StateView.StateKey="Finished"
+                               FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                               Text="No data"
+                               TextColor="{StaticResource Primary}" />
+                    </toolkit:StateContainer.StateViews>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto">
+            <Label FontAttributes="Bold"
+                   FontFamily="{StaticResource AlegreyaSansRegularFontFamily}"
+                   FontSize="22"
+                   HorizontalTextAlignment="Start"
+                   Text="Investments" />
+            <Button BorderColor="{StaticResource Secondary}"
+                    BorderWidth="1"
+                    Command="{Binding NewInvestmentCommand}"
+                    FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                    HeightRequest="40"
+                    HorizontalOptions="End"
+                    Text="New Investment"
+                    WidthRequest="160" />
+        </Grid>
+
+        <Border Grid.Row="3"
+                Margin="-10,0"
+                Padding="10"
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="60"
+                HorizontalOptions="Fill"
+                StrokeThickness="0"
+                VerticalOptions="Fill">
+            <Grid ColumnDefinitions="*,*,50,*" ColumnSpacing="5">
+
+                <VerticalStackLayout Grid.Column="0" Margin="0">
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="12"
+                           HorizontalTextAlignment="Center"
+                           Text="Total invested"
+                           TextColor="{StaticResource Gray100}"
+                           VerticalTextAlignment="Start" />
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           Text="{Binding TotalInvested, StringFormat='{0:C}'}"
+                           TextColor="{StaticResource White}"
+                           VerticalTextAlignment="End" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Margin="0">
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="12"
+                           HorizontalTextAlignment="Center"
+                           Text="Total Value"
+                           TextColor="{StaticResource Gray100}"
+                           VerticalTextAlignment="Start" />
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           Text="{Binding TotalValueToday, StringFormat='{0:C}'}"
+                           TextColor="{StaticResource White}"
+                           VerticalTextAlignment="End" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" Margin="0">
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="12"
+                           HorizontalTextAlignment="Center"
+                           Text="ROI"
+                           TextColor="{StaticResource Gray100}"
+                           VerticalTextAlignment="Start" />
+                    <Label FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           Text="{Binding TotalROI, StringFormat='{0:N2}%'}"
+                           TextColor="{Binding TotalROI, Converter={StaticResource RoiColorConverter}}"
+                           VerticalTextAlignment="End" />
+                </VerticalStackLayout>
+
+                <Button Grid.Row="0"
+                        Grid.Column="3"
+                        Padding="0"
+                        BorderColor="{StaticResource Secondary}"
+                        BorderWidth="1"
+                        Command="{Binding ShowPortfolioCommand}"
+                        FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                        FontSize="12"
+                        HeightRequest="30"
+                        HorizontalOptions="End"
+                        Text="Portfolio"
+                        WidthRequest="90" />
+            </Grid>
+        </Border>
+
+
+        <!--  Investments  -->
+        <CollectionView Grid.Row="4"
+                        ItemsSource="{Binding Investments}"
+                        SelectedItem="{Binding SelectedInvestment}"
+                        SelectionChangedCommand="{Binding InvestmentSelectedCommand}"
+                        SelectionMode="Single"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:InvestmentModel">
+                    <Border Margin="0,5"
+                            Padding="5"
+                            HeightRequest="100"
+                            StrokeShape="RoundRectangle 5"
+                            StrokeThickness="0">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="1,0">
+                                <GradientStop Offset="0.25" Color="#6e25d0" />
+                                <GradientStop Offset="1.0" Color="#992bc2" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <Grid Padding="10"
+                              ColumnDefinitions="Auto, *"
+                              ColumnSpacing="10"
+                              RowDefinitions="Auto, *">
+
+                            <Grid Grid.Row="0"
+                                  Grid.RowSpan="3"
+                                  Grid.Column="0"
+                                  RowDefinitions="Auto, *, Auto"
+                                  RowSpacing="5"
+                                  VerticalOptions="Start">
+                                <Label Grid.Row="0"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding TotalValueToday, StringFormat='{0:C}'}"
+                                       TextColor="{StaticResource White}" />
+                                <Image Grid.Row="1"
+                                       HeightRequest="30"
+                                       Source="{Binding CryptoCurrency.Image}"
+                                       WidthRequest="30" />
+                                <Label Grid.Row="2"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding TotalCoinAmount, StringFormat='{0:N6}'}"
+                                       TextColor="{StaticResource White}" />
+                            </Grid>
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                <Label HorizontalTextAlignment="End" TextColor="{StaticResource Gray100}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span FontAttributes="Bold"
+                                                  FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                                  Text="Total Invested" />
+                                            <Span FontSize="14" Text=": " />
+                                            <Span FontAttributes="Bold"
+                                                  FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                                  FontSize="14"
+                                                  Text="{Binding TotalInvested, StringFormat='{0:C}'}"
+                                                  TextColor="{StaticResource White}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label HorizontalTextAlignment="End" TextColor="{StaticResource Gray100}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span FontAttributes="Bold"
+                                                  FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                                  Text="ROI"
+                                                  TextColor="{StaticResource Gray100}" />
+                                            <Span FontSize="14" Text=": " />
+                                            <Span FontAttributes="Bold"
+                                                  FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                                                  FontSize="14"
+                                                  Text="{Binding ROI, StringFormat='{0:N2} %'}"
+                                                  TextColor="{Binding ROI, Converter={StaticResource RoiColorConverter}}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+
+
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   FontSize="11"
+                                   HorizontalTextAlignment="End"
+                                   Text="{Binding StartDate, StringFormat='{0:d}'}"
+                                   TextColor="{StaticResource Gray900}"
+                                   VerticalOptions="End">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Started on " TextColor="{StaticResource White}" />
+                                        <Span FontAttributes="Bold" Text="{Binding StartDate, StringFormat='{0:d}'}" />
+                                        <Span Text=" with monthly investment of " TextColor="{StaticResource White}" />
+                                        <Span FontAttributes="Bold" Text="{Binding MonthlyAmount, StringFormat='{0:C}'}" />
+                                        <Span Text=" every " TextColor="{StaticResource White}" />
+                                        <Span FontAttributes="Bold" Text="{Binding InvestmentDay, StringFormat='{0}th'}" />
+                                        <Span Text=" of the month." TextColor="{StaticResource White}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   IsVisible="False"
+                                   Text="{Binding InvestmentDay}" />
+                            <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   FontAttributes="Bold"
+                                   FontSize="20"
+                                   HorizontalTextAlignment="Center"
+                                   IsVisible="False"
+                                   Text="{Binding MonthlyAmount, StringFormat='{0:C}'}" />
+
+                            <Image Grid.Row="0"
+                                   Grid.RowSpan="3"
+                                   Grid.Column="1"
+                                   HeightRequest="100"
+                                   HorizontalOptions="End"
+                                   Opacity="0.1"
+                                   Source="{Binding CryptoCurrency.Image}"
+                                   WidthRequest="100" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout toolkit:StateContainer.CurrentState="{Binding LoadingInvestmentsState}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                    <toolkit:StateContainer.StateViews>
+                        <VerticalStackLayout toolkit:StateView.StateKey="Loading">
+                            <ActivityIndicator HeightRequest="30"
+                                               IsRunning="True"
+                                               WidthRequest="30" />
+                            <Label Text="Loading Content..." />
+                        </VerticalStackLayout>
+                        <Label toolkit:StateView.StateKey="Finished"
+                               FontFamily="{StaticResource MontserratSemiboldFontFamily}"
+                               Text="No data"
+                               TextColor="{StaticResource Primary}" />
+                    </toolkit:StateContainer.StateViews>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+    </Grid>
+</bases:BaseContentPage>
