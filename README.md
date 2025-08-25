@@ -27,7 +27,7 @@ CryptoDCACalculator is a mobile app designed to help cryptocurrency investors tr
 ### Home Dashboard
 <img src="Screenshots/Screenshot2.png" alt="Home screen showing current exchange rates and investment summary" width="300">
 
-*Home screen - Real-time cryptocurrency prices in EUR with portfolio summary showing total invested (€11,280), current value (€12,607), and ROI (0.00%)*
+*Home screen - Real-time cryptocurrency prices in EUR with portfolio summary showing loading state
 
 <img src="Screenshots/Screenshot3.png" alt="Home screen with detailed investment list" width="300">
 
